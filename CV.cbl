@@ -83,24 +83,22 @@
       -          "o. KG".        
               10 WS-JOB-LOCATION PIC X(11) VALUE "Duesseldorf".
               10 WS-JOB-RESPONSIBLITIES.
-                 15 WS-JOB-RESPONSBLT-1 PIC X(102) VALUE "- Wuerdigungen
-      -             " von Immobiliengutachten hinsichtlich der Plausibil
-      -             "itaet von Annahmen und Wertermittlung".
+                 15 WS-JOB-RESPONSBLT-3 PIC X(140) VALUE "- Unterstuetzu 
+      -             "ng bei der Erstellung von Unternehmensbewertungen m
+      -             "ittels unterschiedlicher Verfahren und der Aufstell 
+      -             "ung von Operating Models".
                  15 Filler PIC X VALUE X'0A'.
-                 15 WS-JOB-RESPONSBLT-2 PIC X(73) VALUE "- Pruefung von 
-      -             "Purchase Price Allocations hinsichtlich der Plausib
-      -             "ilitaet".
+                 15 WS-JOB-RESPONSBLT-1 PIC X(100) VALUE "- Wuerdigung v
+      -             "on Immobiliengutachten hinsichtlich der Plausibilit
+      -             "aet von Annahmen und Wertermittlung".
                  15 Filler PIC X VALUE X'0A'.
-                 15 WS-JOB-RESPONSBLT-3 PIC X(127) VALUE "- Unterstuetzu 
-      -             "ng bei der Erstellung von Operating Models und Unte
-      -             "rnehmensbewertungsmodellen mittels unterschiedliche
-      -             "r Verfahren".
+                 15 WS-JOB-RESPONSBLT-2 PIC X(75) VALUE "- Wuerdigung vo 
+      -             "n Purchase Price Allocations hinsichtlich der Plaus
+      -             "ibilitaet".
                  15 Filler PIC X VALUE X'0A'.
-                 15 WS-JOB-RESPONSBLT-4 PIC X(167) VALUE "- Recherche vo
-      -             "n Daten fuer die Erstellung von Operating Models, U
-      -             "nternehmensbewertungsmodellen und Purchase Price Al
-      -             "locations (Relief-from-Royalty-Ansatz, MEEM-Ansatz)
-      -             "".
+                 15 WS-JOB-RESPONSBLT-4 PIC X(103) VALUE "- Datenrecherc
+      -             "he für die Erstellung von Unternehmensbewertungen, 
+      -             "Operating Models und Markenbewertungen".
               10 WS-JOB-START.
                  15 WS-JOB-START-MONTH   PIC 9(2) VALUE 05.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
@@ -204,8 +202,8 @@
       -          "ers GmbH".
               10 WS-JOB-LOCATION PIC X(10) VALUE "Muenchen".
               10 WS-JOB-RESPONSIBLITIES.
-                 15 WS-JOB-RESPONSBLT-1 PIC X(37) VALUE "- Erstellung v
-      -             "on Wettbewerbsanalysen".
+                 15 WS-JOB-RESPONSBLT-1 PIC X(37) VALUE "- Erstellung vo
+      -             "n Wettbewerbsanalysen".
                  15 Filler PIC X VALUE X'0A'.
                  15 WS-JOB-RESPONSBLT-2 PIC X(46) VALUE "- Erstellung in
       -             "terner Unterlagen und Dokumente".
@@ -418,9 +416,6 @@
                  15 Filler PIC X VALUE X'0A'.
                  15 WS-VOLTWK-RESPONSBLT-2 PIC X(57) VALUE "- Vorstandsm
       -          "itglied und Ressortleiter (10/2018 - 09/2019)".
-                 15 Filler PIC X VALUE X'0A'.
-                 15 WS-VOLTWK-RESPONSBLT-3 PIC X(51) VALUE "- Planung un
-      -             "d Umsetzung neuer Projekte des Ressorts".
               10 WS-VOLTWK-START.
                  15 WS-VOLTWK-START-MONTH   PIC 9(2) VALUE 10.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
@@ -496,7 +491,7 @@
            DISPLAY "Welche Informationen moechten Sie erhalten?"
            DISPLAY "(1) Alle"
            DISPLAY "(2) Persoenliche Daten"
-           DISPLAY "(3) Meine Motivation"
+           DISPLAY "(3) Kurzprofil"
            DISPLAY "(4) Berufserfahrung"
            DISPLAY "(5) Ausbildung"
            DISPLAY "(6) Kenntnisse"
@@ -504,7 +499,8 @@
            DISPLAY "(8) Hobbys"
            DISPLAY "(9) Programm beenden"
            
-           DISPLAY X'0A' "Geben Sie bitte eine Nummer von 1 bis 9 ein."
+           DISPLAY X'0A' "Geben Sie bitte eine Nummer von 1 bis 9 ein
+      -            "und bestaetigen Sie mit ENTER.".
            ACCEPT WS-USER-INPUT-NO.
            
            EVALUATE WS-USER-INPUT-NO 
@@ -535,7 +531,7 @@
                  DISPLAY "*********************************************"
                  STOP RUN
               WHEN OTHER
-                 GO TO AUSWAHL
+                 DISPLAY "Bitte geben Sie eine Nummer von 1 bis 9 ein."
            END-EVALUATE 
            
            PERFORM NEXT-STEP-para.
