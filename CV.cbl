@@ -32,14 +32,7 @@
       *
        WORKING-STORAGE SECTION.
       *------------------------
-      *
-       01 WS-PERSONAL-INFO USAGE IS DISPLAY.
-           05 WS-NAME     PIC A(13) VALUE "Patrick Beeck".
-           05 WS-ADDRESS  PIC X(33) VALUE "An der Holzung 3, 40668 Meerb
-      -                                   "usch".
-           05 WS-PHONE    PIC X(20) VALUE "+49 170 7693508".
-           05 WS-EMAIL    PIC X(50) VALUE "patrick.beeck@web.de".
-       
+      *       
        01 WS-SHORT-PROFILE USAGE IS DISPLAY.
            05 WS-SHORT-PROFILE-SENTENCE1 PIC X(91) VALUE "Im naechsten J
       -       "ahr strebe ich den Einstieg in die IT und damit einen fac 
@@ -553,11 +546,8 @@
        PERSONAL-INFO-para.
       *----------------
            DISPLAY "***************************************************"
-           DISPLAY "Zur Person:"
-           DISPLAY X'0A' "Name: ", WS-NAME 
-           DISPLAY "Adresse: ", WS-ADDRESS
-           DISPLAY "Mobil: ", WS-PHONE
-           DISPLAY "E-Mail: ", WS-EMAIL
+           DISPLAY "Meine persoenlichen Daten koennen dem Anschreiben so
+      -            "wie dem Lebenslauf entnommen werden."
            DISPLAY SPACE
            DISPLAY "***************************************************"        
            
