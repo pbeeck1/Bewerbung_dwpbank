@@ -1,4 +1,4 @@
-Dieses Github-Repository dient vorrangig dazu, meinen in COBOL verfassten Lebenslauf (CV.exe) zur Verfügung zu stellen. Darüber hinaus lassen sich hier aber auch weitere Bewerbungsunterlagen im PDF-Format finden und abrufen.
+Dieses Github-Repository dient vorrangig dazu, meinen in COBOL verfassten Lebenslauf zur Verfügung zu stellen. Darüber hinaus lassen sich hier aber auch weitere Bewerbungsunterlagen im PDF-Format finden und abrufen.
 
 Die CBL-Datei wurde in VS Code erstellt. Als Compiler wurde GnuCOBOL verwendet. Um die Anwendung "CV" zu erstellen und diese wiederum über das Terminal zu starten, benötigte es die folgenden Schritte:
 
