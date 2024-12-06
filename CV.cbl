@@ -2,16 +2,13 @@
       *----------------------------------------------------------------*
       *                                                                *
       *       Copyright(c) by Patrick Beeck                            *
-      *                       An der Holzung 3, 40668 Meerbusch        *
-      *                       +49 170 7693508                          *
-      *                       patrick.beeck@web.de                     *
       *                                                                *
       *----------------------------------------------------------------*
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID.     HirePatrickBeeckAsTrainee.
        AUTHOR.         PatrickBeeck.
-       DATE-WRITTEN.   03-12-2024.
+       DATE-WRITTEN.   06-12-2024.
 
        ENVIRONMENT DIVISION.
         CONFIGURATION SECTION.
