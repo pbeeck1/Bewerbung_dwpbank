@@ -2,8 +2,14 @@
       *----------------------------------------------------------------*
       *                                                                *
       *       Copyright(c) by Patrick Beeck                            *
+      *       Version: 2.0                                   *
       *                                                                *
       *----------------------------------------------------------------*
+      
+      *Die korrekte Anzeige von Umlauten über die Anbindung ASCI-Zeichen
+      *funktioniert noch nicht, soll aber in einer zukünftigen 
+      *Überarbeitung implementiert werden.
+
       ******************************************************************
        IDENTIFICATION DIVISION.
        PROGRAM-ID.     HirePatrickBeeckAsTrainee.
@@ -21,15 +27,69 @@
        FILE-CONTROL.
       *-------------
       *
+      *An dieser Stelle kann in einem nächsten Schritt eine separate
+      *Daten-Datei zugewiesen werden, welche die unten stehenden Daten 
+      *der Working Stoarage Section (oder zumindest einen Teil derer)
+      *enthält.
+      *
+      *z.B. wie folgt:
+      *SELECT WORK-EXPERIENCE 
+      *ASSIGN TO 'C:\user_name\..\work-experience.txt
+      *ORGANIZATION IS LINE SEQUTENTIAL
+      *ACCESS MODE IS SEQUENTIAL.
+      *
+      *SELECT JOB-RESPONSIBILITIES
+      *ASSIGN TO 'C:\user_name\..\job-responsibilities.txt
+      *ORGANIZATION IS SEQUTENTIAL
+      *ACCESS MODE IS SEQUENTIAL:
+
+
        DATA DIVISION.
       *==============
       *
        FILE SECTION.
       *-------------
       *
+      *An dieser Stelle kann in einem nächsten Schritt die Struktur 
+      *einer separaten Daten-Datei beschrieben werden. Es bietet sich
+      *an, eine .txt-Datei zu hinterlegen. So muss die Datenstruktur:
+      *nur ein einzelnes Mal festgelegt werden und anschließend können
+      * die Daten dem Dateiformat entsprechend in einer Daten-Datei
+      *erfasst werden. Durch den Wegfall der erneuten Betitelung und
+      *Datenstrukturierung im Falle eines neuen, gleichartigen 
+      *Datensatzes lässt sich der Schreibaufwand insgesamt reduzieren.
+      *
+      *FD WORK-EXPERIENCE:
+      *01  WORK-EXPERIENCE-RECORD.
+      *    05 JOB-ID PIC X(2).
+      *    05 FILLER PIC X(3).
+      *    05 JOB-TITLE  PIC X(50).
+      *    05 FILLER PIC X(3).
+      *    05 WS-JOB-EMPLOYER PIC X(27).
+      *    05 FILLER PIC X(3).
+      *    05 WS-JOB-LOCATION PIC X(11).
+      *
+      *FD JOB-RESPONSIBILITIES
+      *01   RESPONSIBILITIES-RECORD.
+      *    05 JOB-ID PIC X(2).
+      *    05 FILLER PIC X(3).
+      *    05 RESPONSIBILITY-NO PIC X(2).
+      *    05 FILLER PIC X(3).
+      *    10 JOB-RESPONSBLT PIC X(250).
+      
+
        WORKING-STORAGE SECTION.
       *------------------------
-      *       
+      * 
+      *In diesem Bereich werden alle für die Anwendung benötigten Daten
+      *deklariert und initialisiert. Die vorliegende Datei soll vollum-
+      *fänglich sein und ohne externe Daten-Dateien auskommmen.
+      *     
+
+      *Zunächst wird der Inhalt des Kurzprofils festgelegt. Dies erfolgt
+      *über alphanumerische Werte in unterschiedlicher Länge. Für jeden
+      *Satz wird eine neue Variable angelegt. Es besteht somit ein Satz-
+      *limit von 250 Zeichen.
        01 WS-SHORT-PROFILE USAGE IS DISPLAY.
            05 WS-SHORT-PROFILE-SENTENCE1 PIC X(91) VALUE "Im naechsten J
       -       "ahr strebe ich den Einstieg in die IT und damit einen fac 
@@ -64,7 +124,12 @@
       -       "im Umgang mit COBOL und bietet bestimmt noch viel Verbess
       -       "erungspotenzial. Aber erste Ideen hierzu habe ich bereits
       -       "...".     
-
+      
+      *Die Berufserfahrung wird unter Angabe eines Jobtitels, der Firma
+      *des Arbeitgebers, des Beschäftigungsortes, der Tätigkeiten/
+      *Verantwortlichkeiten sowie des Beschäftigungszeitraums angegeben.
+      *Es beginnt mit der zuletzt ausgeübten Tätigkeit. Die Auflistung 
+      *erfolgt antichronologisch entsprechend des Startdatums.
        01 WS-WORK-EXPERIENCE USAGE IS DISPLAY.
            05 WS-JOB-1.
               10 WS-JOB-TITLE  PIC X(50) VALUE "Associate im Bereich 'Fi
@@ -88,6 +153,13 @@
                  15 WS-JOB-RESPONSBLT-4 PIC X(104) VALUE "- Datenrecherc
       -             "he fuer die Erstellung von Unternehmensbewertungen, 
       -             " Operating Models und Markenbewertungen".
+      *Die Daten des Beschäftigungszeitraumes werden hier auf mehrere 
+      *Variablen aufgeteilt. Es ist auch eine einzelne Wertzuweisung
+      *denkbar, welche den Beschäftigungszeitraum als Zeichenfolge ohne
+      *Leerzeichen beinhaltet im Format MM/YYYY-MM/YYYY. In der 
+      *PROCEDURE DIVISION könnte dann unterschiedliche Teile dieses 
+      *Wertes verschiedenen Variablen zugewiesen werden, um das Datum in 
+      *einer Textausgabe auch mit Leerzeichen anzugeben. 
               10 WS-JOB-START.
                  15 WS-JOB-START-MONTH   PIC 9(2) VALUE 05.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
@@ -96,7 +168,9 @@
                  15 WS-JOB-END-MONTH   PIC  9(2) VALUE 10.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-JOB-END-YEAR    PIC  9(4) VALUE 2024.
-
+      
+      *Tätigkeit 2, welche als vorletztes ausgeübt wurde und somit am
+      *zweitjüngsten ist.
            05 WS-JOB-2.
               10 WS-JOB-TITLE  PIC X(63) VALUE "Werkstudent im Bereich '
       -          "Technology Consulting - Cyber Security'".
@@ -133,7 +207,8 @@
                  15 WS-JOB-END-MONTH   PIC 9(2) VALUE 03.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-JOB-END-YEAR    PIC 9(4) VALUE 2024.
-
+      
+      *Tätigkeit 3, die am drittjüngsten ist.
            05 WS-JOB-3.
               10 WS-JOB-TITLE  PIC X(62) VALUE "Werkstudent im Bereich '
       -          "Asset, Liability & Capital Management'".
@@ -159,6 +234,7 @@
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-JOB-END-YEAR    PIC 9(4) VALUE 2022.
 
+      *Tätigkeit 4, die am viertjüngsten ist.
            05 WS-JOB-4.
               10 WS-JOB-TITLE  PIC X(81) VALUE "Praktikant im Bereich 'F
       -          "inancial Services Deal Advisory - Mergers & Acquisitio
@@ -189,7 +265,8 @@
                  15 WS-JOB-END-MONTH   PIC 9(2) VALUE 01.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-JOB-END-YEAR    PIC 9(4) VALUE 2021.
-
+      
+      *Tätigkeit 5, die am fünftjüngsten ist.
            05 WS-JOB-5.
               10 WS-JOB-TITLE  PIC X(52) VALUE "Werkstudent in der Strat
       -          "egie- und Managementberatung".
@@ -210,7 +287,8 @@
                  15 WS-JOB-END-MONTH   PIC 9(2) VALUE 07.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-JOB-END-YEAR    PIC 9(4) VALUE 2020.
-
+      
+      *Tätigkeit 6, die am sechstjüngsten ist.
            05 WS-JOB-6.
               10 WS-JOB-TITLE  PIC X(50) VALUE "Praktikant im Bereich 'A
       -          "ssurance - Audit Services'".
@@ -234,7 +312,8 @@
                  15 WS-JOB-END-MONTH   PIC 9(2) VALUE 04.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-JOB-END-YEAR    PIC 9(4) VALUE 2019.
-
+      
+      *Tätigkeit 7, die am siebtjüngsten ist.
                  05 WS-JOB-7.
               10 WS-JOB-TITLE  PIC X(28) VALUE "Wissenschaftliche Hilfsk
       -          "raft".
@@ -258,7 +337,8 @@
                  15 WS-JOB-END-MONTH   PIC 9(2) VALUE 08.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-JOB-END-YEAR    PIC 9(4) VALUE 2019.
-
+      
+      *Tätigkeit 8, die am achtjüngsten ist.
            05 WS-JOB-8.
               10 WS-JOB-TITLE  PIC X(51) VALUE "Praktikant in der Strate
       -          "gie- und Managementberatung".
@@ -284,6 +364,17 @@
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-JOB-END-YEAR    PIC 9(4) VALUE 2018.
        
+      *Die Ausbildungen werden nummeriert und unter Angabe der 
+      *ausbildenden Institution, des Programmnamens (üblicherweise 
+      *Ausbildungsthema + Abschlussbezeichnung), einer Zusatzinformation
+      *sowie des Ausbildungszeitraumes angegeben.
+      *Es beginnt mit der zuletzt begonnenen Ausbildung. Die Auflistung 
+      *erfolgt antichronologisch entsprechend des Startdatums.
+
+      *Tätigkeit 1, die aktuell noch laufende Ausbildung ist. Dies ist 
+      *daran zu erkennen, dass das Ende des Ausbildungszeitraumes mit
+      *"heute" und nicht mit einem Datum im Format MM/JJJJ angegeben 
+      *wird.
        01 WS-EDUCATION USAGE IS DISPLAY.
            05 WS-DEGREE-1.
               10 WS-SCHOOL   PIC X(21) VALUE "Universitaet zu Koeln".
@@ -296,7 +387,8 @@
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-DEGREE-START-YEAR    PIC 9(4) VALUE 2021.
               10 WS-DEGREE-END  PIC X(5) VALUE "heute".
-           
+      
+      *Tätigkeit 2, die am zweitjüngsten ist.
            05 WS-DEGREE-2.
               10 WS-SCHOOL   PIC X(31) VALUE "Linnaeus University, (Schw
       -          "eden)".
@@ -312,6 +404,7 @@
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-DEGREE-END-YEAR    PIC 9(4) VALUE 2020.
            
+      *Tätigkeit 3, die am drittjüngsten ist.
            05 WS-DEGREE-3.
               10 WS-SCHOOL   PIC X(21) VALUE "Universitaet Bayreuth".
               10 WS-COURSE-OF-STUDY   PIC X(32) VALUE "Betriebswirtschaf
@@ -327,6 +420,7 @@
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-DEGREE-END-YEAR    PIC 9(4) VALUE 2021.
            
+      *Tätigkeit 4, die am viertjüngsten ist.
            05 WS-DEGREE-4.
               10 WS-SCHOOL   PIC X(17) VALUE "Sparkasse Krefeld".
               10 WS-COURSE-OF-STUDY   PIC X(27) VALUE "Ausbildung zum Ba
@@ -341,7 +435,14 @@
                  15 WS-DEGREE-END-MONTH   PIC 9(2) VALUE 01.
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-DEGREE-END-YEAR    PIC 9(4) VALUE 2017.
-
+      
+      *Die Auflistung der Kenntnisse und Fähigkeiten hat die Bereiche
+      *IT-bezogene Sprachen ("WS-IT-LANGUAGES"), weitere IT-Kenntnisse 
+      *(WS-IT-SKILLS) und Kenntnisse (natürlicher, also durch den  
+      *Menschen gesprochener) Sprachen (WS-NATURAL-LANGUAGES). Die  
+      *Auflistung der Kenntnisse berücksichtigt den Zeitpunkt des 
+      *Erwerbs einer Fähigkeit und/oder der Relevanz einer Kenntnis
+      *Fähigkeit.
        01 WS-SKILLS USAGE IS DISPLAY.
            05 WS-IT-LANGUAGES.
               10 WS-IT-LANG-1.
@@ -356,6 +457,8 @@
                  15 WS-IT-LANG-3-NAME     PIC X(20) VALUE "Python".
                  15 WS-IT-LANG-3-LEVEL    PIC X(15) VALUE "Grundkenntnis
       -             "se".
+      *Erlangung der WS-IT-LANG-4 im Rahmen des abgelegten 
+      *IT-Zertifikats (siehe Anhänge der Bewerbung)
               10 WS-IT-LANG-4.
                  15 WS-IT-LANG-4-NAME     PIC X(20) VALUE "HTML/CSS/JS/A
       -             "JAX".
@@ -363,6 +466,8 @@
       -             "se".
 
            05 WS-IT-SKILLS.
+      *Erlangung des WS-IT-SKILL-1 im Rahmen des abgelegten 
+      *IT-Zertifikats (siehe Anhänge der Bewerbung)
               10 WS-IT-SKLL-1.
                  15 WS-IT-SKILL-1-NAME     PIC X(55) VALUE "Web-Developm
       -             "ent".
@@ -391,7 +496,14 @@
       -          "ranzoesisch/Chinesisch".           
                  15 WS-NAT-LANG-3-LEVEL    PIC X(15) VALUE "Grundkenntni
       -          "sse".
-           
+      
+      *Die Auflistung meiner ehrenamtlichen Arbeit umfasst zwei 
+      *wesentliche Positionen und erfolgt unter Angabe eines Titels
+      *(welcher grundsätzlich darüber Aufschluss gibt, wo das Ehrenamt
+      *ausgeführt wurde), der Verantwortlichkeiten sowie des Ausübungs-
+      *zeitraumes. Die Auflistung erfolgt antichronologisch entsprechend
+      *des Startdatums. Die zuerst genannte ehrenamtliche Tätigkeit ist
+      *nicht beendet und wird ausgeübt.
        01 WS-VOLUNTARY-WORK USAGE IS DISPLAY.
            05 WS-VOLUNTARY-WORK-1.
               10 WS-VOLTWK-TITLE  PIC X(68) VALUE "Mitglied des Deutsche
@@ -428,24 +540,49 @@
                  15 Filler               PIC X VALUE "/". *> Trenn-Slash
                  15 WS-VOLTWK-END-YEAR    PIC 9(4) VALUE 2021.
        
+      *Um das Bild zu meiner Person noch etwas zu erweitern, sind 
+      *nachfolgend meine Hobbys aufgelistet.
        01 WS-HOBBIES USAGE IS DISPLAY.
            05 WS-SPORT          PIC A(4) VALUE "Judo".
-           05 WS-INSTRUMENT     PIC A(7) VALUE "Gitarre".
+           05 WS-INSTRUMENT     PIC A(15) VALUE "Gitarre spielen".
            05 WS-VOLUNTEERING   PIC X(16) VALUE "Sanitaetsdienste".
            05 WS-OTHER-HOBBIES  PIC X(33) VALUE "Neues lernen und Wissen
       -    " anhaeufen".
-
+      
+      *Bei einer Interaktion des Users mit dem Programm wird ein User 
+      *Input in alphanumerischer Form gegeben. Dabei soll eine einfache
+      *Ja-oder-Nein-Entscheidung mittels einer Boolean-Variable 
+      *getroffen werden. Es sollen unterschiedliche Varianten der 
+      *Antworten "Ja" und "Nein" möglich sein. Diese werden nachfolgend
+      *definiert.
        01 WS-USER-INPUT-TEXT PIC X(5).
        88 WS-TRUE-ANSWER  VALUE "Ja" "ja" "J" "j" "Yes" "yes" "Y" "y"
       -    "True" "TRUE" "true" "1".
        88 WS-FALSE-ANSWER VALUE "Nein" "nein" "N" "n" "No" "no" "False"
       -    "False" "FALSE" "false" "0".
+      *Um nicht nur abfragen zu können, ob eine Antwort "Ja" oder "Nein" 
+      *lautet, werden alle grundsätzlich validen Eingaben in einer 
+      *Variable "WS-VALID-ANSWER" zusammengefasst. Diese kann genutzt
+      *werden, um zu entscheiden, ob eine valide Eingabe durch den User
+      *getätigt wurde.
        88 WS-VALID-ANSWER VALUE "Ja" "ja" "J" "j" "Yes" "yes" "Y" "y"
       -    "True" "TRUE" "true" "1" "Nein" "nein" "N" "n" "No" "no" 
       -    "0" "False" "FALSE" "false".
       
+      *Zur Auswahl einer Nummer in einem Auswahlmenü, erfolgt die 
+      *Deklaration einer einstelligen Integer-Variable, welche den
+      *User-Input erfasst.
        01 WS-USER-INPUT-NO PIC 9(1).
-
+      
+      *Im Auswahlmenü kann die Auswahl erfolgen, dass alle Informationen
+      *ausgegeben werden sollen. Wird dies ausgewählt, wird der Wert der
+      *Variable "WS-SHOW-ALL" von 0 auf 1 gesetzt. Der Wert der Variable
+      *wird anschließend in den Ausgaben der jeweiligen Teilbereiche, 
+      *abgefragt. Der erste Abschnitt "PERSONAL-INFO-para" mit der 
+      *Information zu den persönlichen Daten wird über die Verarbeitung 
+      *des User-Inputs zur Menüauswahl angestoßen. Wenn der Wert der Var
+      *"WS-SHOW-All" 1 ist, wird die Ausgabe des nächsten Teilbereichs 
+      *angestoßen.
        01 WS-SHOW-ALL PIC 9(1) VALUE 0.
 
       *
@@ -462,6 +599,9 @@
       ******************************************************************
        DIALOG SECTION.
       *----------------
+      *Dieser Dialog ist die Einleitung des Programms und leitet in
+      *jedem Fall auf die Auswahl der Informationsbereiche (AUSWAHL 
+      *SECTION) weiter.
            DISPLAY "Guten Tag! Suchen Sie einen neuen Trainee?".
            ACCEPT WS-USER-INPUT-TEXT.
            IF NOT WS-VALID-ANSWER
@@ -489,6 +629,12 @@
       ******************************************************************
        AUSWAHL SECTION.
       *----------------
+      *Das nachfolgende Menü ist die Ebene, von der aus die 
+      *unterschiedlichen Informationen zu meiner Person abegrufen werden 
+      *können. Auf dieses wird der User, nach kurzer Bestätigung durch 
+      *ENTER, nach einer erfolgten Informationsausgabe zurück- bzw. 
+      *weitergeleitet.
+      *
            DISPLAY "***************************************************"
            DISPLAY SPACE
            DISPLAY "Welche Informationen moechten Sie erhalten?"
@@ -512,6 +658,12 @@
                  DISPLAY "*********************************************"
                  DISPLAY "*   GESAMTER LEBENSLAUF VON PATRICK BEECK   *"
                  DISPLAY "*********************************************"
+      *       Der erste Informationsabschnitt wird hier noch direkt
+      *       angestoßen. Anschließend erfolgt in jedem Abschnitt eine 
+      *       kurze Abfrage, ob alle Informationen ausgegeben werden
+      *       sollen. Falls dies der Fall ist, wird in jedem Abschnitt
+      *       auf den nächsten Abschnitt verwiesen, der in der Ausgabe
+      *       folgen soll.
                  PERFORM PERSONAL-INFO-para
               WHEN 2
                  PERFORM PERSONAL-INFO-para
@@ -528,6 +680,8 @@
               WHEN 8   
                  PERFORM HOBBIES-para
               WHEN 9
+      *       Das Programm wird nach Ausgabe einer kurzen Nachricht 
+      *       beendet.
                  DISPLAY "*********************************************"
                  DISPLAY X'0A' "Ich freue mich auf ein persoenliches Ges
       -                  "praech und den Austausch mit Ihnen." X'0A'
@@ -542,6 +696,7 @@
       ******************************************************************
        PERSONAL-INFO-para.
       *----------------
+      *Ausgabe einer Information zu den persönlichen Daten
            DISPLAY "***************************************************"
            DISPLAY "Meine persoenlichen Daten koennen dem Anschreiben so
       -            "wie dem Lebenslauf entnommen werden."
@@ -557,6 +712,7 @@
       ******************************************************************
        SHORT-PROFILE-para.
       *----------------
+      *Ausgabe des Abschnitts "Kurzprofil"
            DISPLAY "***************************************************"
            DISPLAY  WS-SHORT-PROFILE
            DISPLAY SPACE
@@ -571,6 +727,12 @@
       ******************************************************************
        EXPERIENCE-para.
       *------------------
+      *Ausgabe des Abschnitts "Berufserfahrung"
+      *Insbesondere in Abschnitten wie diesem kann der repetitive 
+      *Schreibaufwand durch die Einbindung externer Daten-Dateien  
+      *verringert werden, da der dynamische Aufruf von Variablen z.B. im 
+      *Rahmen einer For-Schleife nicht möglich zu sein scheint in COBOL 
+      *(so zumindest ist mein bisheriges Verständnis der Sprache).
            DISPLAY "***************************************************"
            DISPLAY "Berufserfahrung:"
            DISPLAY SPACE
@@ -640,6 +802,9 @@
       ******************************************************************
        EDUCATION-para.
       *-----------------
+      *Ausgabe des Abschnitts "Ausbildung"
+      *(siehe Anmerkung zur Reduktion repetitiven Schreibaufwands im 
+      *Abschnitt "EXPERIENCE-para")
            DISPLAY "***************************************************"
            DISPLAY "Ausbildung:"
            DISPLAY SPACE
@@ -678,6 +843,7 @@
       ******************************************************************
        SKILLS-para.
       *-----------------
+      *Ausgabe des Abschnitts "Kenntnisse und Fähigkeiten"
            DISPLAY "***************************************************"
            DISPLAY "Kenntnisse und Faehigkeiten:"
            DISPLAY X'0A' "IT-bezogene Sprachen:"
@@ -705,6 +871,7 @@
       ******************************************************************
        VOLUNTARY-WORK-para.
       *-----------------
+      *Ausgabe des Abschnitts "Ehrenamtliche Aktivitäten"
            DISPLAY "***************************************************"
            DISPLAY "Ehrenamtliche Aktivitaeten:"
            DISPLAY SPACE
@@ -730,6 +897,7 @@
       ******************************************************************
        HOBBIES-para.
       *-----------------
+      *Ausgabe des Abschnitts "Hobbys"
            DISPLAY "***************************************************"
            DISPLAY "Hobbys:" WS-SPORT ", " WS-INSTRUMENT ", " 
       -    WS-VOLUNTEERING ", " WS-OTHER-HOBBIES
@@ -741,6 +909,12 @@
       ******************************************************************
        NEXT-STEP-para.
       *-----------------
+      *Ein Abschnitt, welcher den User zur Betätigung der ENTER-Taste
+      *aufruft, um fortzufahren. Dieser wird eingebunden, sodass neue
+      *Ausgaben möglichst weit unten und nicht mittig des Terminals,
+      *oberhalb der erneuten Anzeige des Menüs erscheinen. So soll der 
+      *User mehr Übersicht behalten und den Blick hauptsächlich auf der 
+      *unteren Hälfte des Terminals belassen können.
            DISPLAY SPACE
            DISPLAY "Druecken Sie die ENTER-Taste, um fortzufahren..."
            ACCEPT WS-USER-INPUT-TEXT
